@@ -49,7 +49,7 @@ public class GameActivity extends AppCompatActivity {
             if (!ball.get(i).isAlive())
                 ball.remove(i);
         }
-        hat.rotate(angle);
+//        hat.rotate(angle / 10);
         hat.update();
         //ball.update(delta);
     }
@@ -85,16 +85,22 @@ public class GameActivity extends AppCompatActivity {
 
                 dx = (int) (event.getX() - hat.getCenterX());
                 dy = (int) (event.getY() - hat.getCenterY());
-                if ((dx > 0) && (dy <= 0))
-                    angle = (int) Math.abs(Math.atan((double) dy / (double) dx) * 180 / Math.PI);
-                else if (dx > 0)
-                    angle = (int) (-1 * Math.abs(Math.atan((double) dy / (double) dx) * 180 / Math.PI));
-                else if ((dx < 0) && (dy <= 0))
-                    angle = 90 + (int) Math.abs(Math.atan((double) dy / (double) dx) * 180 / Math.PI);
-                else if (dx < 0)
-                    angle = -90 - (int) Math.abs(Math.atan((double) dy / (double) dx) * 180 / Math.PI);
-//                if (dx != 0)
-//                    angle =(int) (Math.atan((double)dy/(double)dx) * 180 / Math.PI);
+//                if ((dx > 0) && (dy <= 0))
+//                    angle = - 90 - (int) Math.abs(Math.atan((double) dy / (double) dx) * 180 / Math.PI);
+//                else if (dx > 0)
+//                    angle = (-1) * (int) (Math.abs(Math.atan((double) dy / (double) dx) * 180 / Math.PI));
+//                else if ((dx < 0) && (dy <= 0))
+//                    angle = 90 + (int) Math.abs(Math.atan((double) dy / (double) dx) * 180 / Math.PI);
+//                else if (dx < 0)
+//                    angle = (int) Math.abs(Math.atan((double) dy / (double) dx) * 180 / Math.PI);
+                if (dx != 0)
+                    angle = -90 + (int) (Math.atan((double) dy / (double) dx) * 180 / Math.PI);
+                if (dx < 0) {
+                    angle += 180;
+                }
+                if (dx != 0)
+                    hat.rotate(angle);
+//                hat.rotate(-135);
                 System.out.println("dy: " + dy + " dx: " + dx + " angle: " + " dy/dx: " + (double) dy / (double) dx + " angle: " + angle);
                 break;
 
