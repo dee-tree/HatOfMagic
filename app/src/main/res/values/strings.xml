@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name" translatable="false">Hat of Magic</string>
+    <string name="start">Start</string>
+    <string name="settings">Settings</string>
+    <string name="exit">Exit</string>
+</resources>

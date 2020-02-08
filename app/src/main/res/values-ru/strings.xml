@@ -1,0 +1,5 @@
+<resources>
+    <string name="start">Начать</string>
+    <string name="settings">Настройки</string>
+    <string name="exit">Выход</string>
+</resources>
