@@ -1,10 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/game_constraint"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#CB965C05"
+    android:background="#A4000000"
     tools:context=".GameActivity">
+
+
+    <com.codemitry.hatofmagic.GameSurfaceView
+        android:id="@+id/surface"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp" />
+
+    <TextView
+        android:id="@+id/pauseText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="#97050505"
+        android:gravity="center"
+        android:onClick="onPauseTextClick"
+        android:shadowColor="#FFC107"
+        android:shadowDx="4"
+        android:shadowDy="1"
+        android:shadowRadius="30"
+        android:text="@string/pause_text"
+        android:textAlignment="center"
+        android:textColor="#FCE4E4E4"
+        android:textSize="40sp"
+        android:textStyle="italic"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/pauseView"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="20dp"
+        android:onClick="onPauseClick"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/pause" />
+
+    <TextView
+        android:id="@+id/scoreText"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/score"
+        android:foregroundGravity="center"
+        android:freezesText="false"
+        android:gravity="center"
+        android:lines="1"
+        android:shadowColor="#000000"
+        android:shadowDx="2"
+        android:shadowRadius="2"
+        android:text="0"
+        android:textAlignment="center"
+        android:textColor="#FFC107"
+        android:textSize="32sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

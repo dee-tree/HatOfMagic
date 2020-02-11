@@ -14,6 +14,8 @@ class Hat {
     private int x, y;
     private Matrix rotate, position;
     private int rotAngle;
+    private boolean isMoved = false;
+
 
     Hat(GameActivity game) {
 
@@ -35,16 +37,12 @@ class Hat {
     }
 
     void rotate(int angle) {
-        //rotate.reset();
-        //rotate.setScale(1, 1);
-        //rotate.setRotate(angle, width/2, height/2);
 
-//        rotAngle += angle;
-
-        float scaleWidth = ((float) width / sprite.getWidth());
-        float scaleHeight = ((float) height / sprite.getHeight());
+//        float scaleWidth = ((float) width / sprite.getWidth());
+//        float scaleHeight = ((float) height / sprite.getHeight());
 
         //Matrix rotateMatrix = new Matrix();
+        rotAngle = angle;
         rotate.reset();
         rotate.setRotate(angle, width / 2, height / 2);
         rotate.postTranslate(x, y);
@@ -60,6 +58,14 @@ class Hat {
             canvas.drawBitmap(sprite, position, null);
 //            canvas.drawBitmap(sprite, x, y, null);
         }
+    }
+
+    void setMoved(boolean moved) {
+        this.isMoved = moved;
+    }
+
+    boolean getMoved() {
+        return isMoved;
     }
 
     int getX() {
@@ -84,6 +90,14 @@ class Hat {
 
     void setCenterY(int centerY) {
         y = centerY - height / 2;
+    }
+
+    int getHeight() {
+        return this.height;
+    }
+
+    int getWidth() {
+        return this.width;
     }
 
     void setX(int x) {

@@ -1,5 +1,7 @@
 package com.codemitry.hatofmagic;
 
+import android.content.Context;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -7,12 +9,12 @@ import android.view.SurfaceView;
 public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
     GameActivity game;
     GameThread thread;
-    int dx, dy;
+//    int dx, dy;
 
-    public GameSurfaceView(GameActivity game) {
-        super(game);
+    public GameSurfaceView(Context context, AttributeSet attributeSet) {
+        super(context, attributeSet);
 
-        this.game = game;
+        this.game = (GameActivity) context;
         getHolder().addCallback(this);
 
     }
@@ -44,6 +46,10 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         }
 
         Log.d("Surface", "Surface Destroyed");
+    }
+
+    boolean runned() {
+        return thread.getRunned();
     }
 
 //

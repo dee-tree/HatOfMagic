@@ -60,5 +60,9 @@ public class GameThread extends Thread {
         runned = run;
     }
 
+    boolean getRunned() {
+        return this.runned;
+    }
+
 
 }

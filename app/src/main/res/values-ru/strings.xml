@@ -2,4 +2,6 @@
     <string name="start">Начать</string>
     <string name="settings">Настройки</string>
     <string name="exit">Выход</string>
+    <string name="pause_text">Нажми, чтобы продолжить</string>
+    <string name="lose_text">Ты проиграл!</string>
 </resources>

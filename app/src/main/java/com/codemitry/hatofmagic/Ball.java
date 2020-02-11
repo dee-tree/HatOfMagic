@@ -9,7 +9,7 @@ class Ball {
     Bitmap sprite;
     GameActivity game;
     private boolean alive;
-    private float widthScale = 0.1f;
+    private float widthScale = 0.08f;
     private float xBorderRand = 0.2f;
     private float yBorderRand = 0.2f;
     private int x, y;
@@ -44,11 +44,11 @@ class Ball {
         speedX = ((Math.random() * 0.5) + 0.2);
         dx = speedX;
 
-        // MAX: -1.4
-        // MIN: -1.1
-        speedY = -((Math.random() * 0.3) + 1.1);
+        // MAX: -2
+        // MIN: -1.7
+        speedY = -((Math.random() * 0.3) + 1.7);
         dy = speedY;
-        acceleration = 0.0009;
+        acceleration = 0.002;
 
     }
 
@@ -59,6 +59,11 @@ class Ball {
 
     void update(int delta) {
         if (alive) {
+            if (!isAlive() || y > game.getHeight() && (speedY > 0)) {
+                this.clear();
+                // Забираем одну жизнь
+                game.decLife();
+            }
             dx = speedX * delta * directionX;
             x += dx;
             if ((dx > 0) && (x + width >= game.getWidth()))
@@ -70,10 +75,8 @@ class Ball {
             dy = delta * speedY;
             y += dy;
 
-            if (y > game.getHeight() && (speedY > 0)) {
-                this.clear();
-//                System.out.println("Object outed from screen removed");
-            }
+            // Проверка выхода за нижнюю границу
+
 //        System.out.println("x: " + x + " dx: " + dx + " speedX: " + speedX + " delta: " + delta);
 //        System.out.println("y: " + y + " dy: " + dy + " speedY: " + speedY + " delta: " + delta + " acceleration: " + acceleration);
         }
@@ -85,12 +88,25 @@ class Ball {
 
     }
 
+    void setAlive(boolean alive) {
+        this.alive = alive;
+    }
+
+
     public boolean isAlive() {
         return alive;
     }
 
     public int getY() {
         return y;
+    }
+
+    int getCenterX() {
+        return x + width / 2;
+    }
+
+    int getCenterY() {
+        return y + width / 2;
     }
 
     public void setY(int y) {
@@ -103,5 +119,9 @@ class Ball {
 
     public void setX(int x) {
         this.x = x;
+    }
+
+    int getWidth() {
+        return this.width;
     }
 }
