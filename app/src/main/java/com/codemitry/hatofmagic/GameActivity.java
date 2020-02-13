@@ -1,5 +1,6 @@
 package com.codemitry.hatofmagic;
 
+import android.animation.Animator;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -16,10 +17,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class GameActivity extends AppCompatActivity {
-    private boolean started = false;
+    private boolean runned = false;
+    private boolean losed = false;
     private TextView scoreText;
     private TextView pauseText;
     private Bitmap[] lifesImages;
+    private Bitmap losedHealth;
     private GameSurfaceView surface;
     private Bitmap background;
     private Bitmap pauseButton;
@@ -42,6 +45,9 @@ public class GameActivity extends AppCompatActivity {
         width = displayMetrics.widthPixels;
 
         hat = new Hat(this);
+        hat.setCenterX(width / 2);
+        hat.setCenterY(height / 2);
+
         ball = new ArrayList<>();
 
 
@@ -65,7 +71,11 @@ public class GameActivity extends AppCompatActivity {
         lifesImages[0] = Bitmap.createScaledBitmap(lifesImages[0], (int) (0.12 * height), (int) (0.1 * height), false);
         lifesImages[1] = Bitmap.createBitmap(lifesImages[0]);
         lifesImages[2] = Bitmap.createBitmap(lifesImages[0]);
-//        surface.setOnTouchListener(new SwipeTouchListener(this));
+
+        losedHealth = BitmapFactory.decodeResource(getResources(), R.drawable.losed_health);
+        losedHealth = Bitmap.createScaledBitmap(losedHealth, (int) (0.12 * height), (int) (0.1 * height), false);
+
+        runned = true;
     }
 
     void addBall() {
@@ -74,25 +84,27 @@ public class GameActivity extends AppCompatActivity {
 
 
     void update(int delta) {
-        for (int i = ball.size() - 1; i >= 0; i--) {
-            ball.get(i).update(delta);
-            if ((intersection(ball.get(i).getCenterX(), ball.get(i).getCenterY(), ball.get(i).getWidth() / 2, hat.getCenterX(), hat.getCenterY(), hat.getWidth() / 3)) && (hat.getMoved()) && ball.get(i).isAlive()) {
-                ball.get(i).setAlive(false);
-                score++;
-                scoreText.setText(String.valueOf(score));
+        if (runned) {
+            for (int i = ball.size() - 1; i >= 0; i--) {
+                ball.get(i).update(delta);
+                if ((intersection(ball.get(i).getCenterX(), ball.get(i).getCenterY(), ball.get(i).getWidth() / 2, hat.getCenterX(), hat.getCenterY(), hat.getWidth() / 3)) && (hat.getMoved()) && ball.get(i).isAlive()) {
+                    ball.get(i).setAlive(false);
+                    score++;
+                    scoreText.setText(String.valueOf(score));
 
+                }
+                if (!ball.get(i).isAlive())
+                    ball.remove(i);
             }
-            if (!ball.get(i).isAlive())
-                ball.remove(i);
+            hat.update();
+            hat.setMoved(false);
         }
-        hat.update();
-        hat.setMoved(false);
     }
 
     synchronized void draw(Canvas canvas) {
         if (canvas != null) {
             canvas.drawBitmap(background, 0, 0, null);
-            for (int i = 0; i < lifes; i++)
+            for (int i = 0; i < 3; i++)
                 canvas.drawBitmap(lifesImages[i], (width - lifesImages[0].getWidth() * (i + 1)), 10, null);
             for (Ball b : ball)
                 b.draw(canvas);
@@ -138,20 +150,92 @@ public class GameActivity extends AppCompatActivity {
         return super.onTouchEvent(event);
     }
 
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        if (surface.runned() && !losed) {
+            pause();
+        } else if (losed)
+            finish();
+        else if (!surface.runned() && !losed) {
+            start();
+        }
+//    if (surface.runned())
+//        onPauseClick(null);
+    }
+
     public void onPauseClick(View v) {
         if (surface.runned()) {
-            surface.thread.setRunned(false);
-            pauseText.setText(getResources().getString(R.string.pause_text));
-            pauseText.setVisibility(View.VISIBLE);
+            pause();
         }
     }
 
+    void pause() {
+        if (surface.runned()) {
+            surface.thread.setRunned(false);
+            pauseText.setText(getResources().getString(R.string.pause_text));
+
+            pauseText.setEnabled(false);
+            pauseText.setAlpha(0);
+            pauseText.setVisibility(View.VISIBLE);
+            pauseText.animate().alpha(1.0f).setListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    pauseText.setEnabled(true);
+                    pauseText.animate().setListener(null);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
+        }
+    }
+
+    void start() {
+        surface.thread = new GameThread(this, surface);
+        surface.thread.setRunned(true);
+        pauseText.animate().alpha(0f).setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                pauseText.setVisibility(View.GONE);
+                pauseText.animate().setListener(null);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+
+        surface.thread.start();
+    }
+
     public void onPauseTextClick(View v) {
-        if (((TextView) v).getText().toString().equals(getResources().getString(R.string.pause_text))) {
-            pauseText.setVisibility(View.GONE);
-            surface.thread = new GameThread(this, surface);
-            surface.thread.setRunned(true);
-            surface.thread.start();
+        if (!surface.runned() && !losed) {
+            //if (((TextView) v).getText().toString().equals(getResources().getString(R.string.pause_text))) {
+            start();
         }
     }
 
@@ -159,9 +243,38 @@ public class GameActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                losed = true;
                 surface.thread.setRunned(false);
                 pauseText.setText(getResources().getString(R.string.lose_text));
+
+                pauseText.setEnabled(false);
+                pauseText.setAlpha(0);
                 pauseText.setVisibility(View.VISIBLE);
+                pauseText.animate().alpha(1.0f).setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        pauseText.setEnabled(true);
+                        pauseText.animate().setListener(null);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                });
+
+
+//                pauseText.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -174,6 +287,7 @@ public class GameActivity extends AppCompatActivity {
     void decLife() {
         if (lifes > 0) {
             lifes--;
+            lifesImages[lifes] = Bitmap.createBitmap(losedHealth);
             if (lifes == 0) {
                 Timer timer = new Timer();
                 timer.schedule(new TimerTask() {

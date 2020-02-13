@@ -11,7 +11,7 @@ class Ball {
     private boolean alive;
     private float widthScale = 0.08f;
     private float xBorderRand = 0.2f;
-    private float yBorderRand = 0.2f;
+    private float yBorderRand = 0.1f;
     private int x, y;
     private int width;
     private double speedX, dx, speedY, dy, acceleration;
@@ -25,30 +25,31 @@ class Ball {
         sprite = BitmapFactory.decodeResource(game.getResources(), R.drawable.ball);
         sprite = Bitmap.createScaledBitmap(sprite, width, width, false);
 
-        //System.out.println("width: " + game.getWidth() + "  height: " + game.getHeight());
-
         alive = true;
         xBorderRand *= game.getWidth();
         yBorderRand *= game.getHeight();
-//        for (int i = 0; i < 150; i ++ ) {
+
+        speedX = 0;
 
         // Генерация начальных координат объекта
         x = (int) ((Math.random() * (1 + xBorderRand + game.getWidth() + xBorderRand)) - xBorderRand);
-        if (x >= -width || x <= game.getWidth())
+        if (x >= -width || x <= game.getWidth()) {
             y = (int) ((Math.random() * (1 + yBorderRand) + game.getHeight()));
+            speedX = ((Math.random() * 0.5) + 0.2);
+        }
         else
             y = (int) ((Math.random() * (1 + yBorderRand + yBorderRand) + game.getHeight() - yBorderRand));
 //        y = 300;
 
         directionX = (x + width / 2 < game.getWidth() / 2) ? 1 : -1;
-        speedX = ((Math.random() * 0.5) + 0.2);
+        speedX += ((Math.random() * 0.5) + 0.2);
         dx = speedX;
 
         // MAX: -2
         // MIN: -1.7
-        speedY = -((Math.random() * 0.3) + 1.7);
+        speedY = -((Math.random() * 0.4) + 3);
         dy = speedY;
-        acceleration = 0.002;
+        acceleration = 0.006;
 
     }
 

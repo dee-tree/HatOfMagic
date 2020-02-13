@@ -26,11 +26,12 @@ class Hat {
         sprite = BitmapFactory.decodeResource(game.getResources(), R.drawable.hat);
         sprite = Bitmap.createScaledBitmap(sprite, width, height, false);
 
-        x = (game.getWidth() - width) / 2;
-        y = game.getHeight() * 3 / 4;
+        setCenterX(game.getWidth() / 2);
+        setCenterY(game.getHeight() / 2);
 
         rotate = new Matrix();
         position = new Matrix();
+        position.postTranslate(x, y);
     }
 
     void update() {

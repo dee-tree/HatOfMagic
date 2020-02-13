@@ -16,11 +16,25 @@
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp" />
 
+    <ImageView
+        android:id="@+id/pauseView"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:onClick="onPauseClick"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/pause" />
+
     <TextView
         android:id="@+id/pauseText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+
         android:background="#97050505"
         android:gravity="center"
         android:onClick="onPauseTextClick"
@@ -40,17 +54,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <ImageView
-        android:id="@+id/pauseView"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="20dp"
-        android:onClick="onPauseClick"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/pause" />
-
     <TextView
         android:id="@+id/scoreText"
         android:layout_width="70dp"
@@ -58,6 +61,7 @@
         android:layout_marginTop="60dp"
         android:layout_marginEnd="10dp"
         android:background="@drawable/score"
+        android:fontFamily="@font/showcard_gothic_cyrillic"
         android:foregroundGravity="center"
         android:freezesText="false"
         android:gravity="center"

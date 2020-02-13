@@ -12,8 +12,16 @@
     </style>
 
     <style name="MenuButton">
-        <item name="android:textSize">22sp</item>
-        <item name="android:background">#63E91E63</item>
+        <item name="android:textSize">34sp</item>
+        <item name="android:fontFamily">@font/showcard_gothic_cyrillic</item>
+        <item name="android:textColor">@color/menu_text</item>
+        <item name="android:background">@drawable/button</item>
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowRadius">3</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_marginStart">180dp</item>
+        <item name="android:layout_marginEnd">180dp</item>
 
     </style>
 
