@@ -27,31 +27,31 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/pause" />
 
-    <TextView
-        android:id="@+id/pauseText"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
+    <!--    <TextView-->
+    <!--        android:id="@+id/pauseText"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:layout_gravity="center"-->
+    <!--        android:layout_marginStart="0dp"-->
+    <!--        android:layout_marginTop="0dp"-->
 
-        android:background="#97050505"
-        android:gravity="center"
-        android:onClick="onPauseTextClick"
-        android:shadowColor="#FFC107"
-        android:shadowDx="4"
-        android:shadowDy="1"
-        android:shadowRadius="30"
-        android:text="@string/pause_text"
-        android:textAlignment="center"
-        android:textColor="#FCE4E4E4"
-        android:textSize="40sp"
-        android:textStyle="italic"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <!--        android:background="#97050505"-->
+    <!--        android:gravity="center"-->
+    <!--        android:onClick="onPauseTextClick"-->
+    <!--        android:shadowColor="#FFC107"-->
+    <!--        android:shadowDx="4"-->
+    <!--        android:shadowDy="1"-->
+    <!--        android:shadowRadius="30"-->
+    <!--        android:text="@string/pause_text"-->
+    <!--        android:textAlignment="center"-->
+    <!--        android:textColor="#FCE4E4E4"-->
+    <!--        android:textSize="40sp"-->
+    <!--        android:textStyle="italic"-->
+    <!--        android:visibility="gone"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
 
 
     <TextView
@@ -75,6 +75,129 @@
         android:textSize="32sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/pauseLayout"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#97050505"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/pauseText"
+            style="@style/TextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pause_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="0dp"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintVertical_bias="0.2" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintTop_toBottomOf="@id/pauseText"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.5"
+
+            >
+
+            <Button
+                android:id="@+id/continueButton"
+                style="@style/MenuButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onContinueClick"
+                android:text="@string/contin" />
+
+            <Button
+                android:id="@+id/exiToMenuButton"
+                style="@style/MenuButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onToMenuClick"
+                android:text="@string/toMenu" />
+
+
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/loseLayout"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#97050505"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/loseText"
+            style="@style/TextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/lose_text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="0dp"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintVertical_bias="0.2" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintTop_toBottomOf="@id/loseText"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.5"
+
+            >
+
+            <Button
+                android:id="@+id/restartButton"
+                style="@style/MenuButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onRestartClick"
+                android:text="@string/restart" />
+
+            <Button
+                android:id="@+id/toMenuButton"
+                style="@style/MenuButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onToMenuClick"
+                android:text="@string/toMenu" />
+
+
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

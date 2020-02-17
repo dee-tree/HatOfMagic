@@ -10,6 +10,14 @@ public class GameThread extends Thread {
     private GameActivity game;
     private SurfaceHolder holder;
 
+    private int bombTime = 0, ballTime = 0;
+    private int bombRand = 0, ballRand = 0;
+
+    private int BALL_TIMING = 1000;
+    private float BALL_TIMING_RAND = 0.1f;
+    private int BOMB_TIMING = 3000;
+    private float BOMB_TIMING_RAND = 0.1f;
+
     public GameThread(GameActivity game, GameSurfaceView surface) {
         super("GameThread");
         this.game = game;
@@ -28,8 +36,26 @@ public class GameThread extends Thread {
             canvas = null;
             delta = (int) (cTime - time);
             counter += delta;
-            if (counter >= 1000) {
+
+            bombTime += delta;
+            ballTime += delta;
+
+            if (bombTime >= BOMB_TIMING + bombRand) {
+                bombTime = 0;
+                game.addBomb();
+                bombRand = (int) ((Math.random() * 2 * BOMB_TIMING * BOMB_TIMING_RAND) - BOMB_TIMING * BOMB_TIMING_RAND);
+            }
+
+            if (ballTime >= BALL_TIMING + ballRand) {
+                ballTime = 0;
                 game.addBall();
+                ballRand = (int) ((Math.random() * 2 * BALL_TIMING * BALL_TIMING_RAND) - BALL_TIMING * BALL_TIMING_RAND);
+            }
+
+            if (counter >= 1000) {
+                // Мерим секунды :D
+//                game.addBall();
+//                game.addBomb();
 //                 Прошла 1 секунда
 //                System.out.println("1 second!");
                 counter -= 1000;

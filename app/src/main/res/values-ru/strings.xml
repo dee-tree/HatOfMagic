@@ -1,7 +1,11 @@
 <resources>
+
     <string name="start">Начать</string>
     <string name="settings">Настройки</string>
     <string name="exit">Выход</string>
     <string name="pause_text">Нажми, чтобы продолжить</string>
     <string name="lose_text">Ты проиграл!</string>
+    <string name="restart">Начать заново</string>
+    <string name="toMenu">В меню</string>
+    <string name="contin">Continue</string>
 </resources>

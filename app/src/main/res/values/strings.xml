@@ -5,4 +5,7 @@
     <string name="exit">Exit</string>
     <string name="pause_text">Press to continue</string>
     <string name="lose_text">You lose!</string>
+    <string name="restart">Restart</string>
+    <string name="toMenu">To menu</string>
+    <string name="contin">Continue</string>
 </resources>

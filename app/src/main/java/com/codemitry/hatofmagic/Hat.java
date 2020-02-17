@@ -13,7 +13,7 @@ class Hat {
     private int width, height;
     private int x, y;
     private Matrix rotate, position;
-    private int rotAngle;
+    //    private int rotAngle;
     private boolean isMoved = false;
 
 
@@ -39,25 +39,16 @@ class Hat {
 
     void rotate(int angle) {
 
-//        float scaleWidth = ((float) width / sprite.getWidth());
-//        float scaleHeight = ((float) height / sprite.getHeight());
-
-        //Matrix rotateMatrix = new Matrix();
-        rotAngle = angle;
+        //rotAngle = angle;
         rotate.reset();
         rotate.setRotate(angle, width / 2, height / 2);
         rotate.postTranslate(x, y);
         position.set(rotate);
-
-//
-//        sprite = Bitmap.createBitmap(sprite, 0, 0, width, height, rotate, true);
-//        sprite = Bitmap.createScaledBitmap(sprite, width, height, false);
     }
 
     void draw(Canvas canvas) {
         if (canvas != null) {
             canvas.drawBitmap(sprite, position, null);
-//            canvas.drawBitmap(sprite, x, y, null);
         }
     }
 

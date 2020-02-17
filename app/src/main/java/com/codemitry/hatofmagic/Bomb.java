@@ -5,26 +5,35 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
 
-class Ball {
-    Bitmap sprite;
+class Bomb {
+    Bitmap[] sprite;
+    int[] resources = {R.drawable.bomb1, R.drawable.bomb2, R.drawable.bomb3, R.drawable.bomb4};
+    int number, showCount;
+    final int SHOW = 10;
     GameActivity game;
     private boolean alive;
     private float widthScale = 0.09f;
-    private float xBorderRand = 0.1f;
-    private float yBorderRand = 0.02f;
+    private float xBorderRand = 0.2f;
+    private float yBorderRand = 0.0f;
     private int x, y;
-    private int width;
+    private int width, height;
     private double speedX, dx, speedY, dy, acceleration;
     private int directionX;
 
-    Ball(GameActivity game) {
+    Bomb(GameActivity game) {
 
         this.game = game;
         width = (int) (widthScale * (Math.min(game.getHeight(), game.getWidth())));
+        height = (int) Math.round(width * 1.2);
 
-        sprite = BitmapFactory.decodeResource(game.getResources(), R.drawable.ball);
-        sprite = Bitmap.createScaledBitmap(sprite, width, width, false);
+        sprite = new Bitmap[4];
+        for (int i = 0; i < sprite.length; i++) {
+            sprite[i] = BitmapFactory.decodeResource(game.getResources(), resources[i]);
+            sprite[i] = Bitmap.createScaledBitmap(sprite[i], width, height, false);
+        }
 
+        number = 0;
+        showCount = 0;
         alive = true;
         xBorderRand *= game.getWidth();
         yBorderRand *= game.getHeight();
@@ -35,9 +44,8 @@ class Ball {
         x = (int) ((Math.random() * (1 + xBorderRand + game.getWidth() + xBorderRand)) - xBorderRand);
         if (x >= -width || x <= game.getWidth()) {
             y = (int) ((Math.random() * (1 + yBorderRand) + game.getHeight()));
-            speedX = 0.4;
-        }
-        else
+            speedX = 0.7;
+        } else
             y = (int) ((Math.random() * (1 + yBorderRand + yBorderRand) + game.getHeight() - yBorderRand));
 //        y = 300;
 
@@ -47,23 +55,28 @@ class Ball {
 
         // MAX: -2
         // MIN: -1.7
-        speedY = -((Math.random() * 0.4) + 1.8);
+        speedY = -((Math.random() * 0.4) + 2);
         dy = speedY;
-        acceleration = 0.0028;
+        acceleration = 0.003;
 
     }
 
     void draw(Canvas canvas) {
-        if (alive)
-            canvas.drawBitmap(sprite, x, y, null);
+        if (alive) {
+            canvas.drawBitmap(sprite[number], x, y, null);
+
+            if (showCount > SHOW) {
+                number = (number + 1) % sprite.length;
+                showCount = 0;
+            } else
+                showCount++;
+        }
     }
 
     void update(int delta) {
         if (alive) {
             if (!isAlive() || y > game.getHeight() && (speedY > 0)) {
                 this.clear();
-                // Забираем одну жизнь
-                game.decLife();
             }
             dx = speedX * delta * directionX;
             x += dx;
