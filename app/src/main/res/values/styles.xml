@@ -13,6 +13,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+
+    <style name="SpecialButtonStyle">
+        <item name="android:background">@drawable/button</item>
+
+    </style>
+
     <style name="MenuButton">
         <item name="android:textSize">34sp</item>
         <item name="android:fontFamily">@font/showcard_gothic_cyrillic</item>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:tools="http://schemas.android.com/tools"
+    android:drawable="@drawable/ic_creators_button"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:ignore="NewApi">
+
+    <target
+        android:animation="@animator/down_left"
+        android:name="left_group" />
+
+    <target
+        android:animation="@animator/down_right"
+        android:name="right_group" />
+
+</animated-vector>

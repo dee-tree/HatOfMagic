@@ -7,6 +7,45 @@
     android:background="@drawable/background"
     tools:context=".MainActivity">
 
+
+    <!--    <Button-->
+    <!--        android:id="@+id/audioButton"-->
+    <!--        android:layout_width="40dp"-->
+    <!--        android:layout_height="40dp"-->
+    <!--        android:layout_marginStart="20dp"-->
+    <!--        android:layout_marginTop="23dp"-->
+    <!--        android:background="@android:drawable/ic_lock_silent_mode_off"-->
+    <!--        android:onClick="onAudioButtonClick"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+    <ImageButton
+        android:id="@+id/audioButton"
+        style="@style/SpecialButtonStyle"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="23dp"
+        android:onClick="onAudioButtonClick"
+        app:layout_constraintStart_toStartOf="parent"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_lock_silent_mode_off" />
+
+
+    <ImageButton
+        android:id="@+id/languageButton"
+        style="@style/SpecialButtonStyle"
+        android:layout_width="50dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="23dp"
+        android:layout_marginEnd="20dp"
+        android:onClick="onLanguageButtonClick"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/united_states" />
+
+
     <TextView
         android:id="@+id/app_name_text"
         android:layout_width="wrap_content"
@@ -47,17 +86,17 @@
             android:textAllCaps="false"
             android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/settings_button"
-            style="@style/MenuButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:onClick="onSettingsClick"
-            android:text="@string/settings"
-            android:textAlignment="center"
-            android:textAllCaps="false"
-            android:textStyle="bold" />
+        <!--        <Button-->
+        <!--            android:id="@+id/settings_button"-->
+        <!--            style="@style/MenuButton"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:gravity="center"-->
+        <!--            android:onClick="onSettingsClick"-->
+        <!--            android:text="@string/settings"-->
+        <!--            android:textAlignment="center"-->
+        <!--            android:textAllCaps="false"-->
+        <!--            android:textStyle="bold" />-->
 
 
         <Button
@@ -74,5 +113,64 @@
 
     </LinearLayout>
 
+
+    <LinearLayout
+        android:id="@+id/creatorsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/clear_background"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:fontFamily="@font/showcard_gothic_cyrillic"
+            android:gravity="center"
+            android:text="@string/codemitry"
+            android:textSize="32sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:fontFamily="@font/showcard_gothic_cyrillic"
+            android:gravity="center"
+            android:text="@string/v31r"
+            android:textSize="32sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:fontFamily="@font/showcard_gothic_cyrillic"
+            android:gravity="center"
+            android:text="Third"
+            android:textSize="32sp" />
+
+    </LinearLayout>
+
+
+    <ImageButton
+        android:id="@+id/creators_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:background="@null"
+        android:onClick="onCreatorsButtonClick"
+        android:scaleX="0.5"
+        android:scaleY="0.5"
+        app:layout_constraintEnd_toStartOf="@+id/languageButton"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/audioButton"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/show_creators_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

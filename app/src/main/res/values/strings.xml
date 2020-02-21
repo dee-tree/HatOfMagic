@@ -3,9 +3,12 @@
     <string name="start">Start</string>
     <string name="settings">Settings</string>
     <string name="exit">Exit</string>
-    <string name="pause_text">Press to continue</string>
+    <string name="pause_text">Pause</string>
     <string name="lose_text">You lose!</string>
     <string name="restart">Restart</string>
     <string name="toMenu">To menu</string>
     <string name="contin">Continue</string>
+
+    <string name="codemitry" translatable="false">First</string>
+    <string name="v31r" translatable="false">Second</string>
 </resources>

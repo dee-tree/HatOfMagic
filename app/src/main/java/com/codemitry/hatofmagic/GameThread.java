@@ -4,24 +4,32 @@ import android.graphics.Canvas;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 public class GameThread extends Thread {
     private boolean runned = false;
     private GameActivity game;
     private SurfaceHolder holder;
 
-    private int bombTime = 0, ballTime = 0;
-    private int bombRand = 0, ballRand = 0;
+    private Timer bombTimer, candyTimer;
 
-    private int BALL_TIMING = 1000;
-    private float BALL_TIMING_RAND = 0.1f;
-    private int BOMB_TIMING = 3000;
-    private float BOMB_TIMING_RAND = 0.1f;
+//    private int bombTime = 0, ballTime = 0;
+//    private int bombRand = 0, ballRand = 0;
+
+    private int ballTiming = 1500;
+    private float BALL_TIMING_RAND = 0.3f;
+    private int bombTiming = 6000;
+    private float BOMB_TIMING_RAND = 0.2f;
 
     public GameThread(GameActivity game, GameSurfaceView surface) {
         super("GameThread");
         this.game = game;
         this.holder = surface.getHolder();
+
+        bombTimer = new Timer();
+        candyTimer = new Timer();
     }
 
     @Override
@@ -37,22 +45,43 @@ public class GameThread extends Thread {
             delta = (int) (cTime - time);
             counter += delta;
 
-            bombTime += delta;
-            ballTime += delta;
+            game.bombTime += delta;
+            game.ballTime += delta;
 
-            if (bombTime >= BOMB_TIMING + bombRand) {
-                bombTime = 0;
-                game.addBomb();
-                bombRand = (int) ((Math.random() * 2 * BOMB_TIMING * BOMB_TIMING_RAND) - BOMB_TIMING * BOMB_TIMING_RAND);
+            if (game.bombTime >= bombTiming + game.bombRand) {
+                game.bombTime = 0;
+                if (game.isRunned()) {
+                    game.playBompAppearanceSound();
+                    bombTimer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            if (game.isRunned())
+                                game.addBomb();
+                        }
+                    }, 600);
+
+                }
+                game.bombRand = (int) ((Math.random() * 2 * bombTiming * BOMB_TIMING_RAND) - bombTiming * BOMB_TIMING_RAND);
             }
 
-            if (ballTime >= BALL_TIMING + ballRand) {
-                ballTime = 0;
-                game.addBall();
-                ballRand = (int) ((Math.random() * 2 * BALL_TIMING * BALL_TIMING_RAND) - BALL_TIMING * BALL_TIMING_RAND);
+            if (game.ballTime >= ballTiming + game.ballRand) {
+                game.ballTime = 0;
+
+                game.playCandyAppearanceSound();
+                candyTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        if (game.isRunned())
+                            game.addBall();
+                    }
+                }, 100);
+
+
+                game.ballRand = (int) ((Math.random() * 2 * ballTiming * BALL_TIMING_RAND) - ballTiming * BALL_TIMING_RAND);
             }
 
             if (counter >= 1000) {
+
                 // Мерим секунды :D
 //                game.addBall();
 //                game.addBomb();
@@ -61,8 +90,6 @@ public class GameThread extends Thread {
                 counter -= 1000;
             }
             try {
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                    canvas = holder.lockHardwareCanvas();
                 canvas = holder.lockCanvas();
                 synchronized (holder) {
                     game.draw(canvas);
@@ -71,11 +98,6 @@ public class GameThread extends Thread {
             } finally {
                 if (canvas != null)
                     holder.unlockCanvasAndPost(canvas);
-//                try {
-//                    sleep(30);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
             }
             time = cTime;
         }
@@ -90,5 +112,8 @@ public class GameThread extends Thread {
         return this.runned;
     }
 
-
+    public void decBombTiming(int bombTiming) {
+        if (this.bombTiming > 3000)
+            this.bombTiming -= bombTiming;
+    }
 }

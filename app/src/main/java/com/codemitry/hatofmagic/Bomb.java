@@ -3,28 +3,32 @@ package com.codemitry.hatofmagic;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 
 
 class Bomb {
     Bitmap[] sprite;
     int[] resources = {R.drawable.bomb1, R.drawable.bomb2, R.drawable.bomb3, R.drawable.bomb4};
     int number, showCount;
-    final int SHOW = 10;
+    final int SHOW = 6;
     GameActivity game;
     private boolean alive;
-    private float widthScale = 0.09f;
+    private float widthScale = 0.095f;
     private float xBorderRand = 0.2f;
-    private float yBorderRand = 0.0f;
+    private float yBorderRand = 0.1f;
     private int x, y;
     private int width, height;
     private double speedX, dx, speedY, dy, acceleration;
     private int directionX;
 
+    private int angle = 0;
+    private Matrix rotate, position;
+
     Bomb(GameActivity game) {
 
         this.game = game;
         width = (int) (widthScale * (Math.min(game.getHeight(), game.getWidth())));
-        height = (int) Math.round(width * 1.2);
+        height = (int) Math.round(width * 1.25);
 
         sprite = new Bitmap[4];
         for (int i = 0; i < sprite.length; i++) {
@@ -41,29 +45,36 @@ class Bomb {
         speedX = 0;
 
         // Генерация начальных координат объекта
-        x = (int) ((Math.random() * (1 + xBorderRand + game.getWidth() + xBorderRand)) - xBorderRand);
-        if (x >= -width || x <= game.getWidth()) {
-            y = (int) ((Math.random() * (1 + yBorderRand) + game.getHeight()));
-            speedX = 0.7;
-        } else
-            y = (int) ((Math.random() * (1 + yBorderRand + yBorderRand) + game.getHeight() - yBorderRand));
-//        y = 300;
+        x = (int) (Math.random() * (1 + game.getWidth()));
+        y = (int) ((Math.random() * (1 + yBorderRand) + game.getHeight()));
+
 
         directionX = (x + width / 2 < game.getWidth() / 2) ? 1 : -1;
         speedX += ((Math.random() * 0.5) + 0.2);
         dx = speedX;
 
-        // MAX: -2
-        // MIN: -1.7
+
         speedY = -((Math.random() * 0.4) + 2);
         dy = speedY;
         acceleration = 0.003;
 
+        rotate = new Matrix();
+        position = new Matrix();
+        position.postTranslate(x, y);
+
+    }
+
+    void rotate(int angle) {
+
+        rotate.reset();
+        rotate.setRotate(angle, width / 2, height / 2);
+        rotate.postTranslate(x, y);
+        position.set(rotate);
     }
 
     void draw(Canvas canvas) {
         if (alive) {
-            canvas.drawBitmap(sprite[number], x, y, null);
+            canvas.drawBitmap(sprite[number], position, null);
 
             if (showCount > SHOW) {
                 number = (number + 1) % sprite.length;
@@ -88,6 +99,8 @@ class Bomb {
             speedY += delta * acceleration;
             dy = delta * speedY;
             y += dy;
+            angle++;
+            rotate(directionX * angle++);
 
             // Проверка выхода за нижнюю границу
 

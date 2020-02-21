@@ -26,9 +26,11 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        thread = new GameThread(game, this);
-        thread.setRunned(true);
-        thread.start();
+        if (thread == null) {
+            thread = new GameThread(game, this);
+            thread.setRunned(true);
+            thread.start();
+        }
     }
 
     @Override
@@ -52,16 +54,13 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         return thread.getRunned();
     }
 
-//
-//    @Override
-//    public boolean onTouchEvent(MotionEvent event) {
-//        switch (event.getAction()) {
-//            case (MotionEvent.ACTION_DOWN):
-//                dx =
-//        }
-//
-//        return super.onTouchEvent(event);
-//
-//
-//    }
+    void setRunned(boolean run) {
+        thread.setRunned(run);
+    }
+
+    public void decBombTiming(int bombTiming) {
+        thread.decBombTiming(bombTiming);
+    }
+
+
 }
