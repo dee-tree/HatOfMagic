@@ -23,7 +23,7 @@ public class GameThread extends Thread {
     private int bombTiming = 6000;
     private float BOMB_TIMING_RAND = 0.2f;
 
-    public GameThread(GameActivity game, GameSurfaceView surface) {
+    GameThread(GameActivity game, GameSurfaceView surface) {
         super("GameThread");
         this.game = game;
         this.holder = surface.getHolder();
@@ -67,19 +67,20 @@ public class GameThread extends Thread {
             if (game.ballTime >= ballTiming + game.ballRand) {
                 game.ballTime = 0;
 
-                game.playCandyAppearanceSound();
-                candyTimer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        if (game.isRunned())
-                            game.addBall();
-                    }
-                }, 100);
+                if (game.isRunned()) {
+                    game.playCandyAppearanceSound();
+                    candyTimer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            if (game.isRunned())
+                                game.addBall();
+                        }
+                    }, 100);
 
 
-                game.ballRand = (int) ((Math.random() * 2 * ballTiming * BALL_TIMING_RAND) - ballTiming * BALL_TIMING_RAND);
+                    game.ballRand = (int) ((Math.random() * 2 * ballTiming * BALL_TIMING_RAND) - ballTiming * BALL_TIMING_RAND);
+                }
             }
-
             if (counter >= 1000) {
 
                 // Мерим секунды :D
@@ -113,7 +114,7 @@ public class GameThread extends Thread {
     }
 
     public void decBombTiming(int bombTiming) {
-        if (this.bombTiming > 3000)
+        if (this.bombTiming > 3500)
             this.bombTiming -= bombTiming;
     }
 }

@@ -14,7 +14,7 @@ class Candy {
     private int[] resources = {R.drawable.candy_blue, R.drawable.candy_gray, R.drawable.candy_green, R.drawable.candy_violet, R.drawable.candy_yellow};
     private boolean alive;
     private float widthScale = 0.095f;
-    private float xBorderRand = 0.1f;
+    //    private float xBorderRand = 0.1f;
     private float yBorderRand = 0.02f;
     private int x, y;
     private int width, height;
@@ -34,29 +34,27 @@ class Candy {
         sprite = Bitmap.createScaledBitmap(sprite, width, height, false);
 
         alive = true;
-        xBorderRand *= game.getWidth();
+        //xBorderRand *= game.getWidth();
         yBorderRand *= game.getHeight();
 
         speedX = 0;
 
         // Генерация начальных координат объекта
-        x = (int) ((Math.random() * (1 + xBorderRand + game.getWidth() + xBorderRand)) - xBorderRand);
-        if (x >= -width || x <= game.getWidth()) {
-            y = (int) ((Math.random() * (1 + yBorderRand) + game.getHeight()));
-            speedX = 0.4;
-        } else
-            y = (int) ((Math.random() * (1 + yBorderRand + yBorderRand) + game.getHeight() - yBorderRand));
-//        y = 300;
+        x = (int) (Math.random() * (1 + game.getWidth()));
+
+//        y = (int) ((Math.random() * (1 + yBorderRand + yBorderRand) + game.getHeight() - yBorderRand));
+        y = (int) (game.getHeight() * 1.2);
 
         directionX = (x + width / 2 < game.getWidth() / 2) ? 1 : -1;
-        speedX += ((Math.random() * 0.5) + 0.2);
+        //speedX += ((Math.random() * 0.5) + 0.2);   SAVE
+        speedX += ((Math.random() * 0.0003907) + 0.0001563) * game.getWidth();
         dx = speedX;
 
-        // MAX: -2
-        // MIN: -1.7
-        speedY = -((Math.random() * 0.5) + 1.8);
+//        speedY = -((Math.random() * 0.5) + 1.8);    SAVE
+        speedY = -((Math.random() * 0.0007) + 0.0023) * game.getHeight();   // 0.0027
         dy = speedY;
-        acceleration = 0.0028;
+//        acceleration = 0.0028;    SAVE
+        acceleration = 0.0000038 * game.getHeight();
 
         angle = new Random().nextInt(360) + 1;
         dAngle = new Random().nextInt(3) + 1;

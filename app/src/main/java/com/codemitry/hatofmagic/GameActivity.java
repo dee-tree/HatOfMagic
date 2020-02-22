@@ -9,6 +9,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -41,6 +42,7 @@ public class GameActivity extends AppCompatActivity {
     private int candyAppearanceSound;
     private int bombAppearanceSound;
     private int bombFlyingSound, bombFlyingStream;
+    private int bombCatch;
     private MediaPlayer mediaPlayer;
     private boolean runned = false;
     private boolean losed = false;
@@ -53,6 +55,7 @@ public class GameActivity extends AppCompatActivity {
     private Bitmap losedHealth;
     private GameSurfaceView surface;
     private Bitmap background;
+    private Bitmap hitPicture;
     private ImageView pauseView;
     private int height, width;
     private ArrayList<Candy> candies;
@@ -60,6 +63,11 @@ public class GameActivity extends AppCompatActivity {
 
     int bombTime = 0, ballTime = 0;
     int bombRand = 0, ballRand = 0;
+
+    private int DAMAGE_COUNT = 15;
+    private int damage = 0;
+    private Paint damagePaint;
+
 
     private Hat hat;
     private int dx, dy;
@@ -80,6 +88,7 @@ public class GameActivity extends AppCompatActivity {
         Point point = new Point();
         getWindowManager().getDefaultDisplay().getRealSize(point);
         width = point.x;
+        height = point.y;
 
         hat = new Hat(this);
         hat.setCenterX(width / 2);
@@ -108,6 +117,10 @@ public class GameActivity extends AppCompatActivity {
 
         pauseView = findViewById(R.id.pauseView);
 
+        hitPicture = BitmapFactory.decodeResource(getResources(), R.drawable.hit);
+        hitPicture = Bitmap.createScaledBitmap(hitPicture, width, height, false);
+        damagePaint = new Paint();
+
         score = 0;
 
         lifesImages = new Bitmap[lifes];
@@ -119,13 +132,13 @@ public class GameActivity extends AppCompatActivity {
         losedHealth = BitmapFactory.decodeResource(getResources(), R.drawable.losed_health);
         losedHealth = Bitmap.createScaledBitmap(losedHealth, (int) (0.12 * height), (int) (0.1 * height), false);
 
-        runned = true;
 
-        soundPool = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
+        soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
         eatCandySound = soundPool.load(this, R.raw.eat_candy, 2);
         candyAppearanceSound = soundPool.load(this, R.raw.candy_appearance, 1);
         bombAppearanceSound = soundPool.load(this, R.raw.bomp_appearance, 1);
         bombFlyingSound = soundPool.load(this, R.raw.bomb_flying, 0);
+        bombCatch = soundPool.load(this, R.raw.bomb_catch, 2);
 
         mediaPlayer = MediaPlayer.create(this, R.raw.background_game_sound);
 
@@ -140,6 +153,8 @@ public class GameActivity extends AppCompatActivity {
             mediaPlayer.setVolume(0, 1);
         } else
             mediaPlayer.setVolume(0, 0);
+
+        runned = true;
     }
 
     @Override
@@ -161,7 +176,6 @@ public class GameActivity extends AppCompatActivity {
         super.onResume();
         if (runned) {
             mediaPlayer.start();
-            pause();
         }
     }
 
@@ -170,8 +184,8 @@ public class GameActivity extends AppCompatActivity {
         super.onPause();
         if (mediaPlayer.isPlaying())
             mediaPlayer.pause();
-//        if (runned)
-//            pause();
+        if (runned)
+            pause();
     }
 
     void addBall() {
@@ -189,6 +203,7 @@ public class GameActivity extends AppCompatActivity {
             for (int i = candies.size() - 1; i >= 0; i--) {
                 candies.get(i).update(delta);
                 if ((intersection(candies.get(i).getCenterX(), candies.get(i).getCenterY(), candies.get(i).getWidth() / 2, hat.getCenterX(), hat.getCenterY(), hat.getWidth() / 2)) && (hat.getMoved()) && candies.get(i).isAlive()) {
+
                     candies.get(i).setAlive(false);
                     playEatCandySound();
                     score++;
@@ -199,7 +214,7 @@ public class GameActivity extends AppCompatActivity {
                         }
                     });
                     if (score % 5 == 0) {
-                        surface.decBombTiming(50);
+                        surface.decBombTiming(45);
                     }
                 }
                 if (!candies.get(i).isAlive()) {
@@ -211,7 +226,8 @@ public class GameActivity extends AppCompatActivity {
                 bombs.get(i).update(delta);
                 if ((intersection(bombs.get(i).getCenterX(), bombs.get(i).getCenterY(), bombs.get(i).getWidth() / 2, hat.getCenterX(), hat.getCenterY(), hat.getWidth() / 2)) && (hat.getMoved() && bombs.get(i).isAlive())) {
                     bombs.get(i).setAlive(false);
-                    // TODO: Добавить эффект дамага при ловле бомбы
+                    playBombCatch();
+                    damage();
                     decLife();
                 }
 
@@ -237,7 +253,22 @@ public class GameActivity extends AppCompatActivity {
             if (hat.getMoved())
                 hat.draw(canvas);
 
+            if (damage > 0) {
+                if (damage > DAMAGE_COUNT * 4 / 5)
+                    damagePaint.setAlpha(damagePaint.getAlpha() + 255 / (DAMAGE_COUNT / 5) <= 255 ? damagePaint.getAlpha() + 255 / (DAMAGE_COUNT / 5) : 255);
+                else if (damage < DAMAGE_COUNT * 3 / 5)
+                    damagePaint.setAlpha(damagePaint.getAlpha() - 255 / (DAMAGE_COUNT / 5) >= 0 ? damagePaint.getAlpha() - 255 / (DAMAGE_COUNT * 3 / 5) : 0);
+
+
+                canvas.drawBitmap(hitPicture, 0, 0, damagePaint);
+                damage--;
+            }
         }
+    }
+
+    void damage() {
+        damage = DAMAGE_COUNT;
+        damagePaint.setAlpha(0);
     }
 
     public int getHeight() {
@@ -484,8 +515,12 @@ public class GameActivity extends AppCompatActivity {
     }
 
 
+    void playBombCatch() {
+        soundPool.play(bombCatch, 0, isSoundEnabled ? 1 : 0, 2, 0, 0);
+    }
+
     void playEatCandySound() {
-        soundPool.play(eatCandySound, 0, isSoundEnabled ? 1 : 0, 0, 0, 2);
+        soundPool.play(eatCandySound, 0, isSoundEnabled ? 1 : 0, 2, 0, 0);
     }
 
     void playCandyAppearanceSound() {
@@ -497,7 +532,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     void playBombFlyingSound() {
-        bombFlyingStream = soundPool.play(bombFlyingSound, 0, isSoundEnabled ? 1 : 0, 2, -1, 0);
+        bombFlyingStream = soundPool.play(bombFlyingSound, 0, isSoundEnabled ? 1 : 0, 1, -1, 0);
     }
 
     void stopBombFlyingSound() {

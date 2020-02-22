@@ -8,6 +8,8 @@ import android.graphics.Matrix;
 class Hat {
     GameActivity game;
     Bitmap sprite;
+
+
     private float widthScale = 0.12f;
     private float heightScale = 0.17f;
     private int width, height;
@@ -34,8 +36,6 @@ class Hat {
         position.postTranslate(x, y);
     }
 
-    void update() {
-    }
 
     void rotate(int angle) {
 
@@ -45,6 +45,7 @@ class Hat {
         rotate.postTranslate(x, y);
         position.set(rotate);
     }
+
 
     void draw(Canvas canvas) {
         if (canvas != null) {
@@ -99,5 +100,6 @@ class Hat {
     void setY(int y) {
         this.y = y;
     }
+
 
 }

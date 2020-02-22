@@ -15,7 +15,7 @@ class Bomb {
     private boolean alive;
     private float widthScale = 0.095f;
     private float xBorderRand = 0.2f;
-    private float yBorderRand = 0.1f;
+    private float yBorderRand = 0.2f;
     private int x, y;
     private int width, height;
     private double speedX, dx, speedY, dy, acceleration;
@@ -28,7 +28,7 @@ class Bomb {
 
         this.game = game;
         width = (int) (widthScale * (Math.min(game.getHeight(), game.getWidth())));
-        height = (int) Math.round(width * 1.25);
+        height = (int) Math.round(width * 1.3);
 
         sprite = new Bitmap[4];
         for (int i = 0; i < sprite.length; i++) {
@@ -46,17 +46,21 @@ class Bomb {
 
         // Генерация начальных координат объекта
         x = (int) (Math.random() * (1 + game.getWidth()));
-        y = (int) ((Math.random() * (1 + yBorderRand) + game.getHeight()));
+        y = (int) (game.getHeight() * 1.2);
+//        y = (int) ((Math.random() * (1 + yBorderRand) + game.getHeight()));   SAVE
 
 
         directionX = (x + width / 2 < game.getWidth() / 2) ? 1 : -1;
-        speedX += ((Math.random() * 0.5) + 0.2);
+//        speedX += ((Math.random() * 0.5) + 0.2);   SAVE
+        speedX += ((Math.random() * 0.000390625) + 0.0001563) * game.getWidth();
         dx = speedX;
 
 
-        speedY = -((Math.random() * 0.4) + 2);
+        speedY = -((Math.random() * 0.0007) + 0.00233) * game.getHeight();   // 0.0027
+//        speedY = -((Math.random() * 0.4) + 2);    SAVE
         dy = speedY;
-        acceleration = 0.003;
+        acceleration = 0.0000038 * game.getHeight();
+//        acceleration = 0.003;    SAVE
 
         rotate = new Matrix();
         position = new Matrix();
@@ -79,28 +83,30 @@ class Bomb {
             if (showCount > SHOW) {
                 number = (number + 1) % sprite.length;
                 showCount = 0;
-            } else
+            } else if (game.isRunned())
                 showCount++;
         }
     }
 
     void update(int delta) {
         if (alive) {
-            if (!isAlive() || y > game.getHeight() && (speedY > 0)) {
+            if (!isAlive() || (y > game.getHeight() + height) && (speedY > 0)) {
                 this.clear();
             }
             dx = speedX * delta * directionX;
             x += dx;
-            if ((dx > 0) && (x + width >= game.getWidth()))
+            if ((dx > 0) && (x + width >= game.getWidth())) {
                 directionX = -1;
-            else if ((dx < 0) && (x <= 0))
+            } else if ((dx < 0) && (x <= 0)) {
                 directionX = 1;
-
+            }
             speedY += delta * acceleration;
             dy = delta * speedY;
             y += dy;
-            angle++;
-            rotate(directionX * angle++);
+
+            angle += 2 * directionX;
+            // TODO: В случае удара о стену обнулять угол
+            rotate(angle);
 
             // Проверка выхода за нижнюю границу
 

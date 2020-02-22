@@ -128,31 +128,56 @@
 
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/creator_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="70dp"
             android:fontFamily="@font/showcard_gothic_cyrillic"
             android:gravity="center"
-            android:text="@string/codemitry"
+            android:text="@string/creators"
+            android:textColor="@color/button_border"
+            android:textSize="32sp" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="5dp"
+            android:background="@color/button_not_pressed" />
+
+        <TextView
+            android:id="@+id/svetlana"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:fontFamily="@font/showcard_gothic_cyrillic"
+            android:gravity="center"
+            android:text="@string/svetlana"
+            android:textColor="@color/menu_text"
             android:textSize="32sp" />
 
         <TextView
+            android:id="@+id/vladislav"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:fontFamily="@font/showcard_gothic_cyrillic"
             android:gravity="center"
             android:text="@string/v31r"
+            android:textColor="@color/menu_text"
             android:textSize="32sp" />
 
         <TextView
+            android:id="@+id/dmitriy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:fontFamily="@font/showcard_gothic_cyrillic"
             android:gravity="center"
-            android:text="Third"
+            android:text="@string/codemitry"
+            android:textColor="@color/menu_text"
             android:textSize="32sp" />
 
     </LinearLayout>

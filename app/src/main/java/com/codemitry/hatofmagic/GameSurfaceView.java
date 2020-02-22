@@ -21,16 +21,15 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        if (thread == null) {
+//        if (thread == null) {
             thread = new GameThread(game, this);
             thread.setRunned(true);
             thread.start();
-        }
+//        }
     }
 
     @Override

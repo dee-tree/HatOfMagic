@@ -8,4 +8,6 @@
     <string name="restart">Начать заново</string>
     <string name="toMenu">В меню</string>
     <string name="contin">Продолжить</string>
+
+    <string name="creators">Создатели</string>
 </resources>

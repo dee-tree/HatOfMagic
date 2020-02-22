@@ -8,7 +8,9 @@
     <string name="restart">Restart</string>
     <string name="toMenu">To menu</string>
     <string name="contin">Continue</string>
+    <string name="creators">Creators</string>
 
-    <string name="codemitry" translatable="false">First</string>
-    <string name="v31r" translatable="false">Second</string>
+    <string name="codemitry" translatable="false">Codemitry</string>
+    <string name="v31r" translatable="false">V31R</string>
+    <string name="svetlana" translatable="false">Svetlana</string>
 </resources>
