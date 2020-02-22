@@ -16,7 +16,6 @@ import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -74,21 +73,29 @@ public class GameActivity extends AppCompatActivity {
     private int angle;
     private int score;
     private int lifes = 3;
+    private int cutOutheight = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null)
+            cutOutheight = extras.getInt("cutout");
+//        DisplayMetrics displayMetrics = new DisplayMetrics();
+//        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+//        height = displayMetrics.heightPixels;
+//        width = displayMetrics.widthPixels + getNavBarHeight(this);
 
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        height = displayMetrics.heightPixels;
-        width = displayMetrics.widthPixels + getNavBarHeight(this);
+        setContentView(R.layout.activity_game);
 
         Point point = new Point();
         getWindowManager().getDefaultDisplay().getRealSize(point);
-        width = point.x;
+
+        width = point.x - cutOutheight;
         height = point.y;
+
 
         hat = new Hat(this);
         hat.setCenterX(width / 2);
@@ -102,9 +109,7 @@ public class GameActivity extends AppCompatActivity {
 
         surface = null;
 
-        setContentView(R.layout.activity_game);
-
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+//        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         scoreText = findViewById(R.id.scoreText);
         surface = findViewById(R.id.surface);
 

@@ -19,99 +19,108 @@
     <!--        app:layout_constraintStart_toStartOf="parent"-->
     <!--        app:layout_constraintTop_toTopOf="parent" />-->
 
-    <ImageButton
-        android:id="@+id/audioButton"
-        style="@style/SpecialButtonStyle"
-        android:layout_width="44dp"
-        android:layout_height="44dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="23dp"
-        android:onClick="onAudioButtonClick"
-        app:layout_constraintStart_toStartOf="parent"
 
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_lock_silent_mode_off" />
-
-
-    <ImageButton
-        android:id="@+id/languageButton"
-        style="@style/SpecialButtonStyle"
-        android:layout_width="50dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="23dp"
-        android:layout_marginEnd="20dp"
-        android:onClick="onLanguageButtonClick"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/united_states" />
-
-
-    <TextView
-        android:id="@+id/app_name_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:fontFamily="@font/showcard_gothic_cyrillic"
-        android:shadowColor="#353535"
-        android:shadowDx="0"
-        android:shadowDy="3"
-        android:shadowRadius="20"
-        android:text="@string/app_name"
-        android:textColor="#FFFFFF"
-        android:textSize="48sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/menuLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/app_name_text"
-        app:layout_constraintTop_toBottomOf="@id/app_name_text"
-        app:layout_constraintVertical_bias="0.5">
+        android:layout_height="match_parent"
+        tools:visibility="visible">
 
-        <Button
-            android:id="@+id/start_button"
-            style="@style/MenuButton"
+        <ImageButton
+            android:id="@+id/audioButton"
+            style="@style/SpecialButtonStyle"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="23dp"
+            android:onClick="onAudioButtonClick"
+            app:layout_constraintStart_toStartOf="parent"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/ic_lock_silent_mode_off" />
+
+
+        <ImageButton
+            android:id="@+id/languageButton"
+            style="@style/SpecialButtonStyle"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="23dp"
+            android:layout_marginEnd="20dp"
+            android:onClick="onLanguageButtonClick"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/united_states" />
+
+
+        <TextView
+            android:id="@+id/app_name_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:fontFamily="@font/showcard_gothic_cyrillic"
+            android:shadowColor="#353535"
+            android:shadowDx="0"
+            android:shadowDy="3"
+            android:shadowRadius="20"
+            android:text="@string/app_name"
+            android:textColor="#FFFFFF"
+            android:textSize="48sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="onStartClick"
-            android:text="@string/start"
-            android:textAlignment="center"
-            android:textAllCaps="false"
-            android:textStyle="bold" />
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/app_name_text"
+            app:layout_constraintTop_toBottomOf="@id/app_name_text"
+            app:layout_constraintVertical_bias="0.5">
 
-        <!--        <Button-->
-        <!--            android:id="@+id/settings_button"-->
-        <!--            style="@style/MenuButton"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:gravity="center"-->
-        <!--            android:onClick="onSettingsClick"-->
-        <!--            android:text="@string/settings"-->
-        <!--            android:textAlignment="center"-->
-        <!--            android:textAllCaps="false"-->
-        <!--            android:textStyle="bold" />-->
+            <Button
+                android:id="@+id/start_button"
+                style="@style/MenuButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onStartClick"
+                android:text="@string/start"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textStyle="bold" />
+
+            <!--        <Button-->
+            <!--            android:id="@+id/settings_button"-->
+            <!--            style="@style/MenuButton"-->
+            <!--            android:layout_width="match_parent"-->
+            <!--            android:layout_height="wrap_content"-->
+            <!--            android:gravity="center"-->
+            <!--            android:onClick="onSettingsClick"-->
+            <!--            android:text="@string/settings"-->
+            <!--            android:textAlignment="center"-->
+            <!--            android:textAllCaps="false"-->
+            <!--            android:textStyle="bold" />-->
 
 
-        <Button
-            android:id="@+id/exit_button"
-            style="@style/MenuButton"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:onClick="onExitClick"
-            android:text="@string/exit"
-            android:textAlignment="center"
-            android:textAllCaps="false"
-            android:textStyle="bold" />
+            <Button
+                android:id="@+id/exit_button"
+                style="@style/MenuButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:onClick="onExitClick"
+                android:text="@string/exit"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textStyle="bold" />
 
-    </LinearLayout>
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <LinearLayout
@@ -119,6 +128,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/clear_background"
+        android:onClick="@null"
         android:orientation="vertical"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -149,8 +159,9 @@
 
         <TextView
             android:id="@+id/svetlana"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginTop="30dp"
             android:fontFamily="@font/showcard_gothic_cyrillic"
             android:gravity="center"
@@ -160,8 +171,9 @@
 
         <TextView
             android:id="@+id/vladislav"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginTop="40dp"
             android:fontFamily="@font/showcard_gothic_cyrillic"
             android:gravity="center"
@@ -171,8 +183,9 @@
 
         <TextView
             android:id="@+id/dmitriy"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginTop="40dp"
             android:fontFamily="@font/showcard_gothic_cyrillic"
             android:gravity="center"
@@ -192,9 +205,9 @@
         android:onClick="onCreatorsButtonClick"
         android:scaleX="0.5"
         android:scaleY="0.5"
-        app:layout_constraintEnd_toStartOf="@+id/languageButton"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/audioButton"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/show_creators_button" />
 

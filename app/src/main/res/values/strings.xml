@@ -10,7 +10,12 @@
     <string name="contin">Continue</string>
     <string name="creators">Creators</string>
 
-    <string name="codemitry" translatable="false">Codemitry</string>
-    <string name="v31r" translatable="false">V31R</string>
-    <string name="svetlana" translatable="false">Svetlana</string>
+    <string name="codemitry">Developer   Codemitry</string>
+    <string name="codemitry_link" translatable="false">https://vk.com/codemitryhub</string>
+
+    <string name="v31r">Game/Sound designer   V31R</string>
+    <string name="v31r_link" translatable="false">https://vk.com/blogprogammer</string>
+
+    <string name="svetlana">Illustrator   Svetik</string>
+    <string name="svetlana_link" translatable="false">https://vk.com/sagitarioo</string>
 </resources>

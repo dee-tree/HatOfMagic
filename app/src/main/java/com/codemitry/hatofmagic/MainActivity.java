@@ -9,12 +9,17 @@ import android.graphics.drawable.AnimatedVectorDrawable;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
+import android.view.DisplayCutout;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
 import java.util.Locale;
@@ -25,16 +30,36 @@ public class MainActivity extends AppCompatActivity {
     MediaPlayer mediaPlayer;
     Locale myLocale;
     LinearLayout creatorsLayout;
+    ConstraintLayout menuLayout;
+    TextView svetlana, vladislav, dmitry;
+
+    private int cutOutheight = 0;
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+        // Для устройств с челкой
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            DisplayCutout displayCutout = getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
+            if (displayCutout != null) {
+                cutOutheight = Math.abs(displayCutout.getSafeInsetRight() - displayCutout.getSafeInsetLeft());
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-        changeLang(getLanguage(this));
-        updateTexts();
 
         creatorsLayout = findViewById(R.id.creatorsLayout);
+        menuLayout = findViewById(R.id.menuLayout);
+
+        svetlana = findViewById(R.id.svetlana);
+        vladislav = findViewById(R.id.vladislav);
+        dmitry = findViewById(R.id.dmitriy);
+
 
         mediaPlayer = MediaPlayer.create(this, R.raw.background_menu_sound);
         if (isEnabledAudio(this))
@@ -47,6 +72,24 @@ public class MainActivity extends AppCompatActivity {
                 mediaPlayer.start();
             }
         });
+
+        svetlana.setText(Html.fromHtml("<a href=" + getString(R.string.svetlana_link) + ">" + getString(R.string.svetlana) + "</a>"));
+        svetlana.setMovementMethod(LinkMovementMethod.getInstance());
+        svetlana.setLinkTextColor(ContextCompat.getColor(this, R.color.menu_text));
+
+        vladislav.setText(Html.fromHtml("<a href=" + getString(R.string.v31r_link) + ">" + getString(R.string.v31r) + "</a>"));
+        vladislav.setMovementMethod(LinkMovementMethod.getInstance());
+        vladislav.setLinkTextColor(ContextCompat.getColor(this, R.color.menu_text));
+
+        dmitry.setText(Html.fromHtml("<a href=" + getString(R.string.codemitry_link) + ">" + getString(R.string.codemitry) + "</a>"));
+        dmitry.setMovementMethod(LinkMovementMethod.getInstance());
+        dmitry.setLinkTextColor(ContextCompat.getColor(this, R.color.menu_text));
+
+//        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN );
+
+        changeLang(getLanguage(this));
+        updateTexts();
     }
 
     @Override
@@ -119,6 +162,11 @@ public class MainActivity extends AppCompatActivity {
     void updateTexts() {
         ((Button) findViewById(R.id.start_button)).setText(getString(R.string.start));
         ((Button) findViewById(R.id.exit_button)).setText(getString(R.string.exit));
+
+        ((TextView) findViewById(R.id.creator_text)).setText(getString(R.string.creators));
+        svetlana.setText(Html.fromHtml("<a href=" + getString(R.string.svetlana_link) + ">" + getString(R.string.svetlana) + "</a>"));
+        vladislav.setText(Html.fromHtml("<a href=" + getString(R.string.v31r_link) + ">" + getString(R.string.v31r) + "</a>"));
+        dmitry.setText(Html.fromHtml("<a href=" + getString(R.string.codemitry_link) + ">" + getString(R.string.codemitry) + "</a>"));
     }
 
 
@@ -150,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
         mediaPlayer.pause();
         mediaPlayer.seekTo(0);
         Intent gameIntent = new Intent(this, GameActivity.class);
+        gameIntent.putExtra("cutout", cutOutheight);
         startActivity(gameIntent);
         overridePendingTransition(android.R.anim.fade_in, R.anim.to_bottom);
     }
@@ -201,7 +250,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (creatorsLayout.getVisibility() == View.VISIBLE) {
+            menuLayout.setEnabled(true);
+            menuLayout.setVisibility(View.VISIBLE);
             hideCreators();
+        } else {
+            super.onBackPressed();
         }
     }
 
@@ -225,6 +278,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAnimationEnd(Animator animation) {
                 findViewById(R.id.creators_button).setEnabled(true);
+                menuLayout.setEnabled(false);
+                menuLayout.setVisibility(View.GONE);
             }
 
             @Override
@@ -274,6 +329,8 @@ public class MainActivity extends AppCompatActivity {
         if (creatorsLayout.getVisibility() == View.GONE) {
             showCreators();
         } else {
+            menuLayout.setEnabled(true);
+            menuLayout.setVisibility(View.VISIBLE);
             hideCreators();
         }
     }
