@@ -4,8 +4,6 @@ import android.animation.Animator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -16,11 +14,10 @@ import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.KeyCharacterMap;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,14 +26,19 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+
+
+// Copyright Dmitriy Sokolov 2020
 
 public class GameActivity extends AppCompatActivity {
 
     static final String BEST_SCORE_PREF = "BestScore";
 
     private SoundPool soundPool;
+    private int bestScoreSound;
     private int eatCandySound;
     private int candyAppearanceSound;
     private int bombAppearanceSound;
@@ -50,6 +52,7 @@ public class GameActivity extends AppCompatActivity {
     private ConstraintLayout loseLayout, pauseLayout;
     private TextView scoreText;
 
+    private ImageView confettiLeftPicture, confettiRightPicture;
     private Bitmap[] lifesImages;
     private Bitmap losedHealth;
     private GameSurfaceView surface;
@@ -67,11 +70,13 @@ public class GameActivity extends AppCompatActivity {
     private int damage = 0;
     private Paint damagePaint;
 
+    private Locale myLocale;
+    private String lang;
 
     private Hat hat;
     private int dx, dy;
     private int angle;
-    private int score;
+    private int score, bestScore;
     private int lifes = 3;
     private int cutOutheight = 0;
 
@@ -80,13 +85,16 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         Bundle extras = getIntent().getExtras();
         if (extras != null)
             cutOutheight = extras.getInt("cutout");
-//        DisplayMetrics displayMetrics = new DisplayMetrics();
-//        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-//        height = displayMetrics.heightPixels;
-//        width = displayMetrics.widthPixels + getNavBarHeight(this);
+
+        lang = MainActivity.getLanguage(this);
+        if (!lang.equals(""))
+            changeLang(lang);
+
 
         setContentView(R.layout.activity_game);
 
@@ -109,10 +117,11 @@ public class GameActivity extends AppCompatActivity {
 
         surface = null;
 
-//        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         scoreText = findViewById(R.id.scoreText);
         surface = findViewById(R.id.surface);
 
+        confettiLeftPicture = findViewById(R.id.confetti_left);
+        confettiRightPicture = findViewById(R.id.confetti_right);
 
         loseLayout = findViewById(R.id.loseLayout);
         pauseLayout = findViewById(R.id.pauseLayout);
@@ -144,6 +153,7 @@ public class GameActivity extends AppCompatActivity {
         bombAppearanceSound = soundPool.load(this, R.raw.bomp_appearance, 1);
         bombFlyingSound = soundPool.load(this, R.raw.bomb_flying, 0);
         bombCatch = soundPool.load(this, R.raw.bomb_catch, 2);
+        bestScoreSound = soundPool.load(this, R.raw.best_score, 2);
 
         mediaPlayer = MediaPlayer.create(this, R.raw.background_game_sound);
 
@@ -155,11 +165,22 @@ public class GameActivity extends AppCompatActivity {
         });
 
         if (isSoundEnabled) {
-            mediaPlayer.setVolume(0, 1);
+            mediaPlayer.setVolume(1, 1);
         } else
             mediaPlayer.setVolume(0, 0);
 
         runned = true;
+    }
+
+    public void changeLang(String lang) {
+        if (lang.equalsIgnoreCase("")) return;
+        myLocale = new Locale(lang);
+        Locale.setDefault(myLocale);
+
+        android.content.res.Configuration config = new android.content.res.Configuration();
+        config.locale = myLocale;
+        getBaseContext().getResources().updateConfiguration(config, null);
+        getResources().updateConfiguration(config, null);
     }
 
     @Override
@@ -179,7 +200,7 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (runned) {
+        if (losed || runned) {
             mediaPlayer.start();
         }
     }
@@ -241,8 +262,6 @@ public class GameActivity extends AppCompatActivity {
                     stopBombFlyingSound();
                 }
             }
-//            hat.update();
-//            hat.setMoved(false);
         }
     }
 
@@ -303,7 +322,6 @@ public class GameActivity extends AppCompatActivity {
                     if ((dx != 0))
                         hat.rotate(angle);
                     hat.setMoved(true);
-//                System.out.println("dy: " + dy + " dx: " + dx + " angle: " + " dy/dx: " + (double) dy / (double) dx + " angle: " + angle);
                     break;
                 case MotionEvent.ACTION_UP:
                     hat.setMoved(false);
@@ -328,7 +346,7 @@ public class GameActivity extends AppCompatActivity {
             pause();
         } else if (losed)
             finish();
-        else if (!runned && !losed && !surface.runned()) {
+        else if (!runned && !surface.runned()) {
             start();
         }
     }
@@ -439,18 +457,30 @@ public class GameActivity extends AppCompatActivity {
         start();
     }
 
+
     void onLose() {
 
         soundPool.autoPause();
         losed = true;
         runned = false;
         surface.thread.setRunned(false);
+        bestScore = loadBestScore(this);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
 
-                if (score > loadBestScore())
+                if (score > bestScore) {
+                    mediaPlayer.stop();
+                    playBestScoreSound();
+                    confetti();
                     saveBestScore(score);
+                    ((TextView) findViewById(R.id.loseText)).setText(getString(R.string.new_best_score));
+                } else {
+                    mediaPlayer.release();
+                    mediaPlayer = MediaPlayer.create(GameActivity.super.getApplicationContext(), R.raw.lose_sound);
+                    mediaPlayer.setVolume(isSoundEnabled ? 1 : 0, isSoundEnabled ? 1 : 0);
+                    mediaPlayer.start();
+                }
 
                 loseLayout.setAlpha(0);
                 loseLayout.setVisibility(View.VISIBLE);
@@ -463,7 +493,8 @@ public class GameActivity extends AppCompatActivity {
 
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        soundPool.autoPause();
+//                        soundPool.autoPause();
+
                     }
 
                     @Override
@@ -503,8 +534,8 @@ public class GameActivity extends AppCompatActivity {
     }
 
 
-    int loadBestScore() {
-        SharedPreferences prefs = this.getSharedPreferences("CommonPrefs", Activity.MODE_PRIVATE);
+    static int loadBestScore(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("CommonPrefs", Activity.MODE_PRIVATE);
         return prefs.getInt(BEST_SCORE_PREF, 0);
     }
 
@@ -521,48 +552,114 @@ public class GameActivity extends AppCompatActivity {
 
 
     void playBombCatch() {
-        soundPool.play(bombCatch, 0, isSoundEnabled ? 1 : 0, 2, 0, 0);
+        soundPool.play(bombCatch, isSoundEnabled ? 1 : 0, isSoundEnabled ? 1 : 0, 2, 0, 1);
     }
 
     void playEatCandySound() {
-        soundPool.play(eatCandySound, 0, isSoundEnabled ? 1 : 0, 2, 0, 0);
+        soundPool.play(eatCandySound, isSoundEnabled ? 1 : 0, isSoundEnabled ? 1 : 0, 2, 0, 1);
     }
 
     void playCandyAppearanceSound() {
-        soundPool.play(candyAppearanceSound, 0, isSoundEnabled ? 0.8f : 0, 1, 0, 1);
+        soundPool.play(candyAppearanceSound, isSoundEnabled ? 0.8f : 0, isSoundEnabled ? 0.8f : 0, 1, 0, 1);
     }
 
     void playBompAppearanceSound() {
-        soundPool.play(bombAppearanceSound, 0, isSoundEnabled ? 1 : 0, 1, 0, 1);
+        soundPool.play(bombAppearanceSound, isSoundEnabled ? 1 : 0, isSoundEnabled ? 1 : 0, 1, 0, 1);
     }
 
     void playBombFlyingSound() {
-        bombFlyingStream = soundPool.play(bombFlyingSound, 0, isSoundEnabled ? 1 : 0, 1, -1, 0);
+        bombFlyingStream = soundPool.play(bombFlyingSound, isSoundEnabled ? 1 : 0, isSoundEnabled ? 1 : 0, 1, -1, 1);
     }
 
     void stopBombFlyingSound() {
         soundPool.stop(bombFlyingStream);
     }
 
+    void playBestScoreSound() {
+        soundPool.play(bestScoreSound, isSoundEnabled ? 1 : 0, isSoundEnabled ? 1 : 0, 2, 0, 1);
+    }
 
-    public int getNavBarHeight(Context c) {
-        int result = 0;
-        boolean hasMenuKey = ViewConfiguration.get(c).hasPermanentMenuKey();
-        boolean hasBackKey = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
 
-        if (!hasMenuKey && !hasBackKey) {
-            //The device has a navigation bar
-            Resources resources = c.getResources();
+    void confetti() {
+        confettiLeftPicture.setVisibility(View.VISIBLE);
+        confettiRightPicture.setVisibility(View.VISIBLE);
 
-            int orientation = resources.getConfiguration().orientation;
-            int resourceId;
-            resourceId = resources.getIdentifier(orientation == Configuration.ORIENTATION_PORTRAIT ? "navigation_bar_height" : "navigation_bar_height_landscape", "dimen", "android");
+        Animation animLeft = AnimationUtils.loadAnimation(this, R.anim.left_confetti);
+        animLeft.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
 
-            if (resourceId > 0) {
-                return resources.getDimensionPixelSize(resourceId);
             }
-        }
-        return result;
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                confettiLeftPicture.animate().alpha(0).setDuration(1000).setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        confettiLeftPicture.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        Animation animRight = AnimationUtils.loadAnimation(this, R.anim.right_confetti);
+        animRight.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                confettiRightPicture.animate().alpha(0).setDuration(800).setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        confettiRightPicture.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        confettiLeftPicture.startAnimation(animLeft);
+        confettiRightPicture.startAnimation(animRight);
     }
 
 }

@@ -99,7 +99,6 @@ class Candy {
             angle += dAngle;
             rotate(directionX * angle);
 
-            // Проверка выхода за нижнюю границу
 
 //        System.out.println("x: " + x + " dx: " + dx + " speedX: " + speedX + " delta: " + delta);
 //        System.out.println("y: " + y + " dy: " + dy + " speedY: " + speedY + " delta: " + delta + " acceleration: " + acceleration);
@@ -117,7 +116,7 @@ class Candy {
     }
 
 
-    public boolean isAlive() {
+    boolean isAlive() {
         return alive;
     }
 

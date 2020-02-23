@@ -7,6 +7,7 @@ import android.view.SurfaceHolder;
 import java.util.Timer;
 import java.util.TimerTask;
 
+// Copyright Dmitriy Sokolov 2020
 
 public class GameThread extends Thread {
     private boolean runned = false;
@@ -15,8 +16,6 @@ public class GameThread extends Thread {
 
     private Timer bombTimer, candyTimer;
 
-//    private int bombTime = 0, ballTime = 0;
-//    private int bombRand = 0, ballRand = 0;
 
     private int ballTiming = 1500;
     private float BALL_TIMING_RAND = 0.3f;

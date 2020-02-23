@@ -105,10 +105,8 @@ class Bomb {
             y += dy;
 
             angle += 2 * directionX;
-            // TODO: В случае удара о стену обнулять угол
             rotate(angle);
 
-            // Проверка выхода за нижнюю границу
 
 //        System.out.println("x: " + x + " dx: " + dx + " speedX: " + speedX + " delta: " + delta);
 //        System.out.println("y: " + y + " dy: " + dy + " speedY: " + speedY + " delta: " + delta + " acceleration: " + acceleration);
@@ -126,7 +124,7 @@ class Bomb {
     }
 
 
-    public boolean isAlive() {
+    boolean isAlive() {
         return alive;
     }
 

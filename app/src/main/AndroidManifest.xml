@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!-- Copyright Dmitriy Sokolov, Belgorod 2020   -->
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.codemitry.hatofmagic">
 
@@ -8,8 +11,10 @@
         android:roundIcon="@drawable/icon_round"
         android:label="@string/app_name"
         android:isGame="true"
+        android:configChanges="locale"
         android:resizeableActivity="false"
         android:supportsRtl="true"
+
         android:theme="@style/AppTheme">
         <activity
             android:name=".GameActivity"

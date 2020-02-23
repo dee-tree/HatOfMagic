@@ -5,6 +5,8 @@
     <string name="exit">Выход</string>
     <string name="pause_text">Пауза</string>
     <string name="lose_text">Ты проиграл!</string>
+    <string name="new_best_score">Новый рекорд!</string>
+    <string name="best_score">Рекорд: </string>
     <string name="restart">Начать заново</string>
     <string name="toMenu">В меню</string>
     <string name="contin">Продолжить</string>

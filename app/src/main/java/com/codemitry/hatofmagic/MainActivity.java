@@ -24,6 +24,9 @@ import androidx.core.content.ContextCompat;
 
 import java.util.Locale;
 
+// Copyright Dmitriy Sokolov 2020
+
+
 public class MainActivity extends AppCompatActivity {
     final static String ENABLED_AUDIO_PREF = "Audio";
     final static String LANGUAGE_PREF = "Language";
@@ -31,8 +34,9 @@ public class MainActivity extends AppCompatActivity {
     Locale myLocale;
     LinearLayout creatorsLayout;
     ConstraintLayout menuLayout;
-    TextView svetlana, vladislav, dmitry;
+    TextView svetlana, vladislav, dmitry, bestScoreText;
 
+    private int bestScore = 0;
     private int cutOutheight = 0;
 
     @Override
@@ -51,19 +55,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         setContentView(R.layout.activity_main);
 
         creatorsLayout = findViewById(R.id.creatorsLayout);
         menuLayout = findViewById(R.id.menuLayout);
 
-        svetlana = findViewById(R.id.svetlana);
-        vladislav = findViewById(R.id.vladislav);
-        dmitry = findViewById(R.id.dmitriy);
-
 
         mediaPlayer = MediaPlayer.create(this, R.raw.background_menu_sound);
         if (isEnabledAudio(this))
-            mediaPlayer.setVolume(0, 1);
+            mediaPlayer.setVolume(1, 1);
         else
             mediaPlayer.setVolume(0, 0);
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -72,6 +74,13 @@ public class MainActivity extends AppCompatActivity {
                 mediaPlayer.start();
             }
         });
+
+        bestScoreText = findViewById(R.id.best_score);
+
+
+        svetlana = findViewById(R.id.svetlana);
+        vladislav = findViewById(R.id.vladislav);
+        dmitry = findViewById(R.id.dmitriy);
 
         svetlana.setText(Html.fromHtml("<a href=" + getString(R.string.svetlana_link) + ">" + getString(R.string.svetlana) + "</a>"));
         svetlana.setMovementMethod(LinkMovementMethod.getInstance());
@@ -118,10 +127,9 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         overridePendingTransition(R.anim.to_top, android.R.anim.fade_out);
         mediaPlayer.start();
-//        if (isEnabledAudio(this)) {
-//            mediaPlayer.setVolume(0, 1);
-//        } else
-//            mediaPlayer.setVolume(0, 0);
+
+        updateBestScore();
+
         updateAudioButton();
         updateLanguageButton();
     }
@@ -159,11 +167,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    void updateBestScore() {
+        bestScore = GameActivity.loadBestScore(this);
+
+        if (bestScore > 0) {
+            bestScoreText.setText((getString(R.string.best_score) + "  " + bestScore));
+            bestScoreText.setVisibility(View.VISIBLE);
+        } else
+            bestScoreText.setVisibility(View.GONE);
+    }
+
     void updateTexts() {
         ((Button) findViewById(R.id.start_button)).setText(getString(R.string.start));
         ((Button) findViewById(R.id.exit_button)).setText(getString(R.string.exit));
 
         ((TextView) findViewById(R.id.creator_text)).setText(getString(R.string.creators));
+        updateBestScore();
         svetlana.setText(Html.fromHtml("<a href=" + getString(R.string.svetlana_link) + ">" + getString(R.string.svetlana) + "</a>"));
         vladislav.setText(Html.fromHtml("<a href=" + getString(R.string.v31r_link) + ">" + getString(R.string.v31r) + "</a>"));
         dmitry.setText(Html.fromHtml("<a href=" + getString(R.string.codemitry_link) + ">" + getString(R.string.codemitry) + "</a>"));
@@ -179,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             changeLang("en");
         }
+
         updateLanguageButton();
         updateTexts();
     }
@@ -189,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
             mediaPlayer.setVolume(0, 0);
         } else {
             saveEnabledAudio(this, true);
-            mediaPlayer.setVolume(0, 1);
+            mediaPlayer.setVolume(1, 1);
         }
         updateAudioButton();
     }
@@ -241,9 +261,11 @@ public class MainActivity extends AppCompatActivity {
         myLocale = new Locale(lang);
         saveLanguage(this, lang);
         Locale.setDefault(myLocale);
+
         android.content.res.Configuration config = new android.content.res.Configuration();
         config.locale = myLocale;
-        getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+        getBaseContext().getResources().updateConfiguration(config, null);
+        getResources().updateConfiguration(config, null);
 
     }
 
@@ -328,6 +350,7 @@ public class MainActivity extends AppCompatActivity {
     public void onCreatorsButtonClick(View v) {
         if (creatorsLayout.getVisibility() == View.GONE) {
             showCreators();
+            System.out.println("CREATORS GONE!");
         } else {
             menuLayout.setEnabled(true);
             menuLayout.setVisibility(View.VISIBLE);
